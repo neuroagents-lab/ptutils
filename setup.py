@@ -6,8 +6,8 @@ if os.path.exists("requirements.txt"):
         requirements = fb.readlines()
 else:
     requirements = [
-        "torch==1.9",
-        "torchvision==0.10.0",
+        "torch>=1.9",
+        "torchvision>=0.10.0",
         "numpy>=1.20.3",
         "black>=19.10b0",
         "pymongo>=3.11.1",

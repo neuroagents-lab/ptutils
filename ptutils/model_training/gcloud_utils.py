@@ -80,5 +80,6 @@ def configure_tpu(tpu_name, tpu_zone):
     tpu_ip = None
     tpu_vm = True
     if tpu_name != "tpu-vm":
+        tpu_vm = False
         tpu_ip = lookup_tpu_ip_by_name(tpu_name, tpu_zone)
     configure_env_for_tpu(tpu_ip, tpu_vm=tpu_vm)

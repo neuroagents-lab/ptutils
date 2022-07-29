@@ -14,9 +14,6 @@ from ptutils.model_training.train_utils import (
     get_resume_checkpoint_path,
     parse_config,
 )
-from ptutils.model_training.supervised_imagenet_trainer import (
-    SupervisedImageNetTrainer,
-)
 
 class Runner:
     def train(self, config_file):
@@ -25,6 +22,9 @@ class Runner:
         # assurance/sanity check that the number of print statements
         # is the number of GPUs/TPU cores
         if config_file["trainer"] == "SupervisedImageNet":
+            from ptutils.model_training.supervised_imagenet_trainer import (
+                SupervisedImageNetTrainer,
+            )
             print("Using Supervised ImageNet Trainer")
             trainer = SupervisedImageNetTrainer(config_file)
         else:
