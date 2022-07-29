@@ -1,5 +1,5 @@
 DDP_PORT = "8888"
-TPU_ZONE = "us-central1-b"
+TPU_ZONE = "europe-west4-a"
 USE_TPU = False
 USE_MONGODB = True
 
