@@ -1,11 +1,4 @@
-import os
-
-import torch
-
 from torch.utils import data
-from torchvision import transforms, datasets
-
-from ptutils.datasets import ImageNetBase
 
 # =======================================================
 # Main function to get dataloader from dataset
@@ -47,77 +40,11 @@ def _acquire_data_loader(
     )
     return loader
 
-
-# =======================================================
-# ImageNet data sets and loaders (from image files)
-# =======================================================
-
-
-def get_imagenet_loaders(params, my_transforms, rank=0, world_size=1, tpu=False):
-    # Assumes image_dir organization is /PATH/TO/IMAGENET/{train, val}/{synsets}/*.JPEG
-    assert "image_dir" in params.keys()
-    assert "dataset_class" in params.keys()
-    assert "train_batch_size" in params.keys()
-    assert "val_batch_size" in params.keys()
-    assert "num_workers" in params.keys()
-    assert "train" in my_transforms.keys()
-    assert "val" in my_transforms.keys()
-
-    train_batch_size = params["train_batch_size"]
-    val_batch_size = params["val_batch_size"]
-    num_workers = params["num_workers"]
-    drop_last = params.get("drop_last", False)
-    dataset_class = params["dataset_class"]
-    assert issubclass(dataset_class, ImageNetBase)
-    imagenet_dir = params["image_dir"]
-    train_transforms = my_transforms["train"]
-    val_transforms = my_transforms["val"]
-
-    if train_transforms is not None:
-        train_set = dataset_class(is_train=True,
-                                  imagenet_dir=imagenet_dir,
-                                  image_transforms=train_transforms)
-
-    val_set = dataset_class(is_train=False,
-                            imagenet_dir=imagenet_dir,
-                            image_transforms=val_transforms)
-
-    if train_transforms is not None:
-        train_loader = _acquire_data_loader(
-            dataset=train_set,
-            train=True,
-            batch_size=train_batch_size,
-            num_workers=num_workers,
-            rank=rank,
-            world_size=world_size,
-            drop_last=drop_last,
-            tpu=tpu,
-        )
-    else:
-        train_loader = None
-
-    val_loader = _acquire_data_loader(
-        dataset=val_set,
-        train=False,
-        batch_size=val_batch_size,
-        num_workers=num_workers,
-        rank=rank,
-        world_size=world_size,
-        drop_last=drop_last,
-        tpu=tpu,
-    )
-
-    return train_loader, val_loader
-
-
 # =======================================================
 # Wrapper for getting dataloaders
 # =======================================================
-
-
-def get_dataloaders(params, my_transforms, device, rank=0, world_size=1):
-    assert "dataset" in params.keys()
-    tpu = device.type == "xla"
+def wrap_dataloaders(dataloader_func, params, my_transforms, device, rank=0, world_size=1):
+    tpu = (device.type == "xla")
 
     assert params["train_batch_size"] % world_size == 0
     if "val_batch_size" in params.keys():
@@ -127,16 +54,13 @@ def get_dataloaders(params, my_transforms, device, rank=0, world_size=1):
     if "val_batch_size" in params.keys():
         params["val_batch_size"] = params["val_batch_size"] // world_size
 
-    if params["dataset"] == "imagenet":
-        train_loader, val_loader = get_imagenet_loaders(
-            params=params,
-            my_transforms=my_transforms,
-            rank=rank,
-            world_size=world_size,
-            tpu=tpu,
-        )
-    else:
-        raise ValueError("{} not supported yet.".format(params["dataset"]))
+    train_loader, val_loader = dataloader_func(
+        params=params,
+        my_transforms=my_transforms,
+        rank=rank,
+        world_size=world_size,
+        tpu=tpu,
+    )
 
     if tpu:
         import torch_xla.distributed.parallel_loader as pl

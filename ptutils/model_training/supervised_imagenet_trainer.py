@@ -4,6 +4,7 @@ import numpy as np
 import torch
 from torchvision import transforms
 
+from ptutils.datasets import ImageNetBase
 import ptutils.loss_functions as lf
 from ptutils.model_training.train_utils import (
     reduce_metric,
@@ -13,7 +14,7 @@ from ptutils.model_training.train_utils import (
     save_checkpoint,
 )
 from ptutils.model_training.trainer import Trainer
-from ptutils.model_training.training_dataloader_utils import get_dataloaders
+from ptutils.model_training.training_dataloader_utils import _acquire_dataloader, wrap_dataloaders
 from ptutils.datasets import ImageNetSupervised
 from ptutils.models.model_transforms import MODEL_TRANSFORMS
 from ptutils.core.default_dirs import IMAGENET_DATA_DIR
@@ -66,6 +67,62 @@ class SupervisedImageNetTrainer(Trainer):
         )
         return optim
 
+    def get_imagenet_loaders(self, params, my_transforms, rank=0, world_size=1, tpu=False):
+        # Assumes image_dir organization is /PATH/TO/IMAGENET/{train, val}/{synsets}/*.JPEG
+        assert "image_dir" in params.keys()
+        assert "dataset_class" in params.keys()
+        assert "train_batch_size" in params.keys()
+        assert "val_batch_size" in params.keys()
+        assert "num_workers" in params.keys()
+        assert "train" in my_transforms.keys()
+        assert "val" in my_transforms.keys()
+
+        train_batch_size = params["train_batch_size"]
+        val_batch_size = params["val_batch_size"]
+        num_workers = params["num_workers"]
+        drop_last = params.get("drop_last", False)
+        dataset_class = params["dataset_class"]
+        assert issubclass(dataset_class, ImageNetBase)
+        imagenet_dir = params["image_dir"]
+        train_transforms = my_transforms["train"]
+        val_transforms = my_transforms["val"]
+
+        if train_transforms is not None:
+            train_set = dataset_class(is_train=True,
+                                      imagenet_dir=imagenet_dir,
+                                      image_transforms=train_transforms)
+
+        val_set = dataset_class(is_train=False,
+                                imagenet_dir=imagenet_dir,
+                                image_transforms=val_transforms)
+
+        if train_transforms is not None:
+            train_loader = _acquire_data_loader(
+                dataset=train_set,
+                train=True,
+                batch_size=train_batch_size,
+                num_workers=num_workers,
+                rank=rank,
+                world_size=world_size,
+                drop_last=drop_last,
+                tpu=tpu,
+            )
+        else:
+            train_loader = None
+
+        val_loader = _acquire_data_loader(
+            dataset=val_set,
+            train=False,
+            batch_size=val_batch_size,
+            num_workers=num_workers,
+            rank=rank,
+            world_size=world_size,
+            drop_last=drop_last,
+            tpu=tpu,
+        )
+
+        return train_loader, val_loader
+
     def initialize_dataloader(self):
         assert hasattr(self, "config")
         assert hasattr(self, "use_tpu")
@@ -80,7 +137,6 @@ class SupervisedImageNetTrainer(Trainer):
         params = dict()
         params["dataset_class"] = ImageNetSupervised
         params["image_dir"] = self.config.get("image_dir", IMAGENET_DATA_DIR)
-        params["dataset"] = "imagenet"
         params["train_batch_size"] = self.config["optimizer_params"]["train_batch_size"]
         params["val_batch_size"] = self.config["optimizer_params"]["val_batch_size"]
         params["num_workers"] = self.config["dataloader_workers"]
@@ -93,8 +149,9 @@ class SupervisedImageNetTrainer(Trainer):
             MODEL_TRANSFORMS[self.model_name]["val"]
         )
 
-        train_loader, val_loader = get_dataloaders(
-            params,
+        train_loader, val_loader = wrap_dataloaders(
+            dataloader_func=self.get_imagenet_loaders,
+            params=params,
             my_transforms=my_transforms,
             device=self.device,
             rank=self.rank,
