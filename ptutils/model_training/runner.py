@@ -15,6 +15,7 @@ from ptutils.model_training.train_utils import (
     parse_config,
 )
 
+
 class Runner:
     def train(self, config_file):
         # Note: this can be subclasses how you like, with the rest being unmodified
@@ -25,6 +26,7 @@ class Runner:
             from ptutils.model_training.supervised_imagenet_trainer import (
                 SupervisedImageNetTrainer,
             )
+
             print("Using Supervised ImageNet Trainer")
             trainer = SupervisedImageNetTrainer(config_file)
         else:
@@ -37,11 +39,12 @@ class Runner:
         assert isinstance(args, dict)
         args["gpus"] = [args["gpus"][rank]]
         dist.init_process_group(
-            backend="nccl", init_method="env://",
-            world_size=args["world_size"], rank=rank
+            backend="nccl",
+            init_method="env://",
+            world_size=args["world_size"],
+            rank=rank,
         )
         self.train(args)
-
 
     def tpu_train(self, rank, args):
         self.train(args)
@@ -63,8 +66,7 @@ class Runner:
 
         if args.resume_epoch is not None:
             config_file["resume_checkpoint"] = get_resume_checkpoint_path(
-                save_dir=config_file["save_dir"],
-                resume_epoch=args.resume_epoch
+                save_dir=config_file["save_dir"], resume_epoch=args.resume_epoch
             )
 
         tpu = config_file.get("tpu", USE_TPU)
@@ -77,7 +79,9 @@ class Runner:
                 config_file["tpu_zone"] = TPU_ZONE
             configure_tpu(tpu, config_file["tpu_zone"])
 
-            xmp.spawn(self.tpu_train, args=(config_file,), nprocs=None, start_method="fork")
+            xmp.spawn(
+                self.tpu_train, args=(config_file,), nprocs=None, start_method="fork"
+            )
         else:
             import torch.multiprocessing as mp
 
@@ -91,7 +95,9 @@ class Runner:
             # dist.get_world_size() does not work since it is yet to be initialized
             config_file["world_size"] = len(config_file["gpus"])
 
-            mp.spawn(self.gpu_train, args=(config_file,), nprocs=config_file["world_size"])
+            mp.spawn(
+                self.gpu_train, args=(config_file,), nprocs=config_file["world_size"]
+            )
 
 
 if __name__ == "__main__":
@@ -103,4 +109,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
     runner = Runner()
     runner.run(args)
-

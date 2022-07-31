@@ -11,6 +11,7 @@ from ptutils.model_training.dbinterface import MongoInterface
 from ptutils.model_training.train_utils import parse_config
 from ptutils.core.default_constants import USE_MONGODB
 
+
 class Trainer:
     def __init__(self, config):
         if isinstance(config, str):
@@ -201,7 +202,7 @@ class Trainer:
 
         steps = np.sum(self.current_epoch >= np.asarray(lr_decay_schedule))
         if steps > 0:
-            new_lr = initial_lr * (lr_decay_rate ** steps)
+            new_lr = initial_lr * (lr_decay_rate**steps)
             for param_group in self.optimizer.param_groups:
                 param_group["lr"] = new_lr
 

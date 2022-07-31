@@ -40,11 +40,14 @@ def _acquire_data_loader(
     )
     return loader
 
+
 # =======================================================
 # Wrapper for getting dataloaders
 # =======================================================
-def wrap_dataloaders(dataloader_func, params, my_transforms, device, rank=0, world_size=1):
-    tpu = (device.type == "xla")
+def wrap_dataloaders(
+    dataloader_func, params, my_transforms, device, rank=0, world_size=1
+):
+    tpu = device.type == "xla"
 
     assert params["train_batch_size"] % world_size == 0
     if "val_batch_size" in params.keys():

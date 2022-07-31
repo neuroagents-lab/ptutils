@@ -15,9 +15,11 @@ class ImageNetSupervised(ImageNetBase):
     """
 
     def __init__(self, is_train, imagenet_dir, image_transforms):
-        super(ImageNetSupervised, self).__init__(is_train=is_train,
-                                                 imagenet_dir=imagenet_dir,
-                                                 image_transforms=image_transforms)
+        super(ImageNetSupervised, self).__init__(
+            is_train=is_train,
+            imagenet_dir=imagenet_dir,
+            image_transforms=image_transforms,
+        )
 
     def __getitem__(self, index):
         return self.dataset.__getitem__(index)
@@ -34,11 +36,9 @@ if __name__ == "__main__":
             transforms.ToTensor(),
         ]
     )
-    d = ImageNetSupervised(is_train=True,
-                           imagenet_dir=IMAGENET_DATA_DIR,
-                           image_transforms=my_transforms)
+    d = ImageNetSupervised(
+        is_train=True, imagenet_dir=IMAGENET_DATA_DIR, image_transforms=my_transforms
+    )
     image, label = d[1000000]
     print(image.shape)
     print(label)
-
-

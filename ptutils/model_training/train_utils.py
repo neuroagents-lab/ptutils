@@ -194,6 +194,7 @@ def check_best_loss(current_loss, best_loss):
         return current_loss, True
     return best_loss, False
 
+
 def annealing_cos(start, end, factor, weight=1):
     """Calculate annealing cos learning rate.
     Taken from: https://github.com/open-mmlab/mmcv/blob/bcf85026c3f2683212d2a3a25f58102b3e5f75ef/mmcv/runner/hooks/lr_updater.py#L401-L416

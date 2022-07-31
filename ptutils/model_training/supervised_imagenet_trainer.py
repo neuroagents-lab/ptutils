@@ -14,10 +14,14 @@ from ptutils.model_training.train_utils import (
     save_checkpoint,
 )
 from ptutils.model_training.trainer import Trainer
-from ptutils.model_training.training_dataloader_utils import _acquire_dataloader, wrap_dataloaders
+from ptutils.model_training.training_dataloader_utils import (
+    _acquire_dataloader,
+    wrap_dataloaders,
+)
 from ptutils.datasets import ImageNetSupervised
 from ptutils.models.model_transforms import MODEL_TRANSFORMS
 from ptutils.core.default_dirs import IMAGENET_DATA_DIR
+
 
 class SupervisedImageNetTrainer(Trainer):
     def __init__(self, config):
@@ -67,7 +71,9 @@ class SupervisedImageNetTrainer(Trainer):
         )
         return optim
 
-    def get_imagenet_loaders(self, params, my_transforms, rank=0, world_size=1, tpu=False):
+    def get_imagenet_loaders(
+        self, params, my_transforms, rank=0, world_size=1, tpu=False
+    ):
         # Assumes image_dir organization is /PATH/TO/IMAGENET/{train, val}/{synsets}/*.JPEG
         assert "image_dir" in params.keys()
         assert "dataset_class" in params.keys()
@@ -88,13 +94,15 @@ class SupervisedImageNetTrainer(Trainer):
         val_transforms = my_transforms["val"]
 
         if train_transforms is not None:
-            train_set = dataset_class(is_train=True,
-                                      imagenet_dir=imagenet_dir,
-                                      image_transforms=train_transforms)
+            train_set = dataset_class(
+                is_train=True,
+                imagenet_dir=imagenet_dir,
+                image_transforms=train_transforms,
+            )
 
-        val_set = dataset_class(is_train=False,
-                                imagenet_dir=imagenet_dir,
-                                image_transforms=val_transforms)
+        val_set = dataset_class(
+            is_train=False, imagenet_dir=imagenet_dir, image_transforms=val_transforms
+        )
 
         if train_transforms is not None:
             train_loader = _acquire_data_loader(
@@ -349,7 +357,9 @@ class SupervisedImageNetTrainer(Trainer):
             self.results["accs_top5"]["val"].append(average_top5)
 
             # Check if current top-1 accuracy is best
-            self.best_acc, self.is_best = check_best_accuracy(average_top1, self.best_acc)
+            self.best_acc, self.is_best = check_best_accuracy(
+                average_top1, self.best_acc
+            )
 
     def save_checkpoint(self):
         assert hasattr(self, "current_epoch")
@@ -377,8 +387,7 @@ class SupervisedImageNetTrainer(Trainer):
         ):
             save_epoch = self.current_epoch
             self._save_to_db(
-                curr_state=curr_state,
-                save_keys=["epoch", "results", "curr_best_acc"]
+                curr_state=curr_state, save_keys=["epoch", "results", "curr_best_acc"]
             )
 
         # we always save the intermediate checkpoints each epoch
