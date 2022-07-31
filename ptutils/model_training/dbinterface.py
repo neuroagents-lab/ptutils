@@ -236,7 +236,7 @@ class MongoInterface(DBInterface):
             # document object
             doc_copy = self._mongoify(doc_copy)
 
-            new_id = self.collection.save(doc_copy)
+            new_id = self.collection.insert_one(doc_copy)
             doc["_id"] = new_id
             object_ids.append(new_id)
 
