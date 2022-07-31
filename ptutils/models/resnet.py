@@ -301,7 +301,7 @@ class ResNet(nn.Module):
 
 
 def _resnet(arch, block, layers):
-    model = ResNet(block, layers, **kwargs)
+    model = ResNet(block=block, layers=layers)
     return model
 
 

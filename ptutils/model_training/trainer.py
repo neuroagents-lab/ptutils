@@ -1,12 +1,10 @@
 import os
 import random
 import shutil
-
 import torch
-
 import numpy as np
 import torch.nn as nn
-
+import ptutils
 from ptutils.model_training.dbinterface import MongoInterface
 from ptutils.model_training.train_utils import parse_config
 from ptutils.core.default_constants import USE_MONGODB

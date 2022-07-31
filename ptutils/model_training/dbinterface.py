@@ -66,7 +66,7 @@ class MongoInterface(DBInterface):
         self.database = self.client[self.database_name]
         self.print_fn = kwargs.get("print_fn", print)
 
-        if self.collection_name not in self.database.collection_names():
+        if self.collection_name not in self.database.list_collection_names():
             self.print_fn("Making exp_id index")
             self.collection = self.database[self.collection_name]
             self.collection.create_index("exp_id")

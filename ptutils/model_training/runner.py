@@ -104,7 +104,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, default="")
+    parser.add_argument("--config", type=str, default="", required=True)
     parser.add_argument("--resume-epoch", type=str, default=None)
     args = parser.parse_args()
     runner = Runner()

@@ -20,7 +20,6 @@ from ptutils.model_training.training_dataloader_utils import (
 )
 from ptutils.datasets import ImageNetSupervised
 from ptutils.models.model_transforms import MODEL_TRANSFORMS
-from ptutils.core.default_dirs import IMAGENET_DATA_DIR
 
 
 class SupervisedImageNetTrainer(Trainer):
@@ -105,7 +104,7 @@ class SupervisedImageNetTrainer(Trainer):
         )
 
         if train_transforms is not None:
-            train_loader = _acquire_data_loader(
+            train_loader = _acquire_dataloader(
                 dataset=train_set,
                 train=True,
                 batch_size=train_batch_size,
@@ -118,7 +117,7 @@ class SupervisedImageNetTrainer(Trainer):
         else:
             train_loader = None
 
-        val_loader = _acquire_data_loader(
+        val_loader = _acquire_dataloader(
             dataset=val_set,
             train=False,
             batch_size=val_batch_size,
@@ -144,7 +143,7 @@ class SupervisedImageNetTrainer(Trainer):
 
         params = dict()
         params["dataset_class"] = ImageNetSupervised
-        params["image_dir"] = self.config.get("image_dir", IMAGENET_DATA_DIR)
+        params["image_dir"] = self.config.get("image_dir", "")
         params["train_batch_size"] = self.config["optimizer_params"]["train_batch_size"]
         params["val_batch_size"] = self.config["optimizer_params"]["val_batch_size"]
         params["num_workers"] = self.config["dataloader_workers"]

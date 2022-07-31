@@ -11,9 +11,10 @@ else:
         "numpy>=1.20.3",
         "black>=19.10b0",
         "pymongo>=3.11.1",
-        "bson>=0.5.10",
         "jsonpickle>=1.4.1",
         "shapely>=1.7.1",
+        "regex",
+        "google-cloud-storage",
     ]
 
 print(find_packages())

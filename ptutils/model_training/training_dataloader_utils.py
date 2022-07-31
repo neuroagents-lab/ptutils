@@ -5,7 +5,7 @@ from torch.utils import data
 # =======================================================
 
 
-def _acquire_data_loader(
+def _acquire_dataloader(
     dataset,
     train,
     batch_size,
