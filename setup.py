@@ -14,8 +14,6 @@ else:
         "bson>=0.5.10",
         "jsonpickle>=1.4.1",
         "shapely>=1.7.1",
-        "pickle>=4.0",
-        "shutil",
     ]
 
 print(find_packages())
