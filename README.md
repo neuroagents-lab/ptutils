@@ -53,3 +53,11 @@ if [ "$format_occurred" = true ]; then
     exit 1
 fi
 ```
+
+# Contributors
+- Nathan C. L. Kong (Stanford)
+- Aran Nayebi (Stanford/MIT)
+- Javier Sagastuy-Brena (Stanford)
+
+# License
+MIT
