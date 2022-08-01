@@ -1,5 +1,6 @@
 # ptutils
-Pytorch utilities for model training. 
+Pytorch utilities for model training on GPU and TPU in a single, flexible interface that can be subclassed with your own methods.
+Model results are (optionally) saved to a MongoDB, for asynchronous visualization.
 
 # Installation
 To install run:
@@ -13,7 +14,7 @@ pip install -e .
 The example scripts support training ResNet-18 on ImageNet categorization, e.g.
 ```
 cd ptutils/model_training/
-python runner.py --config=configs/resnet18_supervised_imagenet_trainer_tpu.json
+python runner.py --config=configs/resnet18_supervised_imagenet_trainer_[gpu/tpu].json
 ```
 You can substitute your own training method by importing `from ptutils.model_training.runner import Runner`, and subclassing `Runner.train()`.
 
