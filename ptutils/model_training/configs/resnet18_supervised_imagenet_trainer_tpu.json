@@ -3,7 +3,7 @@
     "port": 27017,
     "db_name": "imagenet",
     "coll_name": "xentloss_resnet18",
-    "exp_id": "exp0",
+    "exp_id": "tpuexp0",
     "trainer": "SupervisedImageNet",
     "image_dir": "/mnt/datasets/imagenet_raw/",
     "gpus": null,
