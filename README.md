@@ -18,6 +18,13 @@ python runner.py --config=configs/resnet18_supervised_imagenet_trainer_[gpu/tpu]
 ```
 You can substitute your own training method by importing `from ptutils.model_training.runner import Runner`, and subclassing `Runner.train()`.
 
+# MongoDB
+By default, this packages saves model results to MongoDB.
+If you would like to use it, follow [these instructions](https://www.mongodb.com/docs/manual/installation/) to install MongoDB.
+Otherwise, to disable this feature, set `"use_mongodb": false` in your configuration json.
+
+The function `ptutils.core.utils.grab_results` shows an example of how to grab the results from MongoDB for the `SupervisedImageNetTrainer`, and [this notebook](https://github.com/anayebi/ptutils/blob/main/Plot%20Model%20Training%20Results%20Example.ipynb) gives an example of plotting it.
+
 # Code Formatting:
 Put this in `.git/hooks/pre-commit`, and run `sudo chmod +x .git/hooks/pre-commit`.
 
