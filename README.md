@@ -23,7 +23,7 @@ By default, this packages saves model results to MongoDB.
 If you would like to use it, follow [these instructions](https://www.mongodb.com/docs/manual/installation/) to install MongoDB.
 Otherwise, to disable this feature, set `"use_mongodb": false` in your configuration json.
 
-The function `ptutils.core.utils.grab_results` shows an example of how to grab the results from MongoDB for the `SupervisedImageNetTrainer`, and [this notebook](https://github.com/anayebi/ptutils/blob/main/Plot%20Model%20Training%20Results%20Example.ipynb) gives an example of plotting it.
+The function `ptutils.core.utils.grab_results()` is an example of how to grab the results from MongoDB for the `SupervisedImageNetTrainer`, and [this notebook](https://github.com/anayebi/ptutils/blob/main/Plot%20Model%20Training%20Results%20Example.ipynb) gives an example of plotting it.
 
 # Code Formatting:
 Put this in `.git/hooks/pre-commit`, and run `sudo chmod +x .git/hooks/pre-commit`.
