@@ -25,6 +25,6 @@ setup(
     install_requires=requirements,
     python_requires=">=3.6",
     # metadata to display on PyPI
-    description="Pytorch utilities for model training",
+    description="Pytorch utilities for model training on GPU and TPU",
     # could also include long_description, download_url, etc.
 )
