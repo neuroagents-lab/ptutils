@@ -180,31 +180,7 @@ class Trainer:
         return device
 
     def adjust_learning_rate(self):
-        # TODO: This may need to be reimplemented in a derived class if, for
-        # example, different layers have different learning rates or learning
-        # rate schedules.
-
-        assert hasattr(self, "optimizer")
-        assert hasattr(self, "config")
-        assert hasattr(self, "use_tpu")
-
-        self.check_key("optimizer_params")
-        assert "lr_decay_schedule" in self.config["optimizer_params"].keys()
-        assert "lr_decay_rate" in self.config["optimizer_params"].keys()
-        assert "initial_lr" in self.config["optimizer_params"].keys()
-
-        initial_lr = self.config["optimizer_params"]["initial_lr"]
-        lr_decay_schedule = self.config["optimizer_params"]["lr_decay_schedule"]
-        lr_decay_rate = self.config["optimizer_params"]["lr_decay_rate"]
-        assert isinstance(lr_decay_rate, float)
-
-        steps = np.sum(self.current_epoch >= np.asarray(lr_decay_schedule))
-        if steps > 0:
-            new_lr = initial_lr * (lr_decay_rate**steps)
-            for param_group in self.optimizer.param_groups:
-                param_group["lr"] = new_lr
-
-            self.print_fn(f"Updating learning rate to: {new_lr}")
+        pass
 
     def get_model(self, model_name):
         """
@@ -222,9 +198,7 @@ class Trainer:
         assert hasattr(self, "use_tpu")
         self.check_key("model")
 
-        model = self.get_model(
-            self.config["model"],
-        )
+        model = self.get_model(self.config["model"],)
 
         model = model.to(self.device)
 

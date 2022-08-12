@@ -30,11 +30,7 @@ if __name__ == "__main__":
     from ptutils.core.default_dirs import IMAGENET_DATA_DIR
 
     my_transforms = transforms.Compose(
-        [
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-        ]
+        [transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor(),]
     )
     d = ImageNetSupervised(
         is_train=True, imagenet_dir=IMAGENET_DATA_DIR, image_transforms=my_transforms

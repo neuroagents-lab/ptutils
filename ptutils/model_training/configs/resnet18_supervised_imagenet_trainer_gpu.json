@@ -6,7 +6,7 @@
     "exp_id": "gpuexp0",
     "trainer": "SupervisedImageNet",
     "image_dir": "/mnt/datasets/imagenet/",
-    "gpus": [1],
+    "gpus": [0],
     "ddp_port": 8888,
     "tpu": false,
     "seed": 1,
