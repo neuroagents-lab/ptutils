@@ -253,13 +253,7 @@ class SupervisedImageNetTrainer(Trainer):
             top1.update(rep_acc1, data.size(0))
             top5.update(rep_acc5, data.size(0))
 
-            if (not self.use_tpu) and (self.rank == 0):
-                print_str = (
-                    f"[Epoch {self.current_epoch}; Step {i+1}/{num_steps}] "
-                    f"Train Loss {rep_loss:.6f}; Train Accuracy: {rep_acc1:.6f}"
-                )
-                self.print_fn(f"{print_str}")
-            else:
+            if self.use_tpu:
                 if curr_step % 10 == 0:
                     examples_seen = i * batch_size * self.world_size
                     examples_seen += (self.rank + 1) * batch_size
@@ -276,6 +270,13 @@ class SupervisedImageNetTrainer(Trainer):
                         f"\tLoss: {loss.item():.6f}"
                         f"\tStep: {curr_step}"
                     )
+            else:
+                if self.rank == 0:
+                    print_str = (
+                        f"[Epoch {self.current_epoch}; Step {i+1}/{num_steps}] "
+                        f"Train Loss {rep_loss:.6f}; Train Accuracy: {rep_acc1:.6f}"
+                    )
+                    self.print_fn(f"{print_str}")
 
         average_loss = losses.avg
         average_top1 = top1.avg
