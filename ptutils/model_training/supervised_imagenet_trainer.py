@@ -270,13 +270,12 @@ class SupervisedImageNetTrainer(Trainer):
                         f"\tLoss: {loss.item():.6f}"
                         f"\tStep: {curr_step}"
                     )
-            else:
-                if self.rank == 0:
-                    print_str = (
-                        f"[Epoch {self.current_epoch}; Step {i+1}/{num_steps}] "
-                        f"Train Loss {rep_loss:.6f}; Train Accuracy: {rep_acc1:.6f}"
-                    )
-                    self.print_fn(f"{print_str}")
+            elif self.rank == 0:
+                print_str = (
+                    f"[Epoch {self.current_epoch}; Step {i+1}/{num_steps}] "
+                    f"Train Loss {rep_loss:.6f}; Train Accuracy: {rep_acc1:.6f}"
+                )
+                self.print_fn(f"{print_str}")
 
         average_loss = losses.avg
         average_top1 = top1.avg
