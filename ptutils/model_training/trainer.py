@@ -1,14 +1,12 @@
 import os
-import random
 import shutil
 import torch
-import numpy as np
 import torch.nn as nn
 import ptutils
 from ptutils.model_training.dbinterface import MongoInterface
 from ptutils.model_training.train_utils import parse_config
 from ptutils.core.default_constants import USE_MONGODB
-
+from ptutils.core.utils import set_seed
 
 class Trainer:
     def __init__(self, config):
@@ -124,15 +122,7 @@ class Trainer:
         self.check_key("seed")
         seed = self.config["seed"]
 
-        random.seed(seed)
-        os.environ["PYTHONHASHSEED"] = str(seed)
-        np.random.seed(seed)
-        torch.manual_seed(seed)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed(seed)
-            torch.cuda.manual_seed_all(seed)  # If using multi-GPU
-            torch.backends.cudnn.benchmark = False
-            torch.backends.cudnn.deterministic = True
+        set_seed(seed)
 
     def _set_device(self):
         self.check_key("gpus")
