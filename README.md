@@ -55,8 +55,8 @@ fi
 ```
 
 # Contributors
-- [Nathan C. L. Kong](https://github.com/nathankong) (Stanford)
 - [Aran Nayebi](https://github.com/anayebi) (Stanford/MIT)
+- [Nathan C. L. Kong](https://github.com/nathankong) (Stanford)
 - [Javier Sagastuy-Brena](https://github.com/jvrsgsty) (Stanford)
 
 # License
