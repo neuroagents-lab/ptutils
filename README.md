@@ -53,11 +53,13 @@ if [ "$format_occurred" = true ]; then
     exit 1
 fi
 ```
+# License
+MIT
 
 # Contributors
 - [Aran Nayebi](https://github.com/anayebi) (Stanford/MIT)
 - [Nathan C. L. Kong](https://github.com/nathankong) (Stanford)
 - [Javier Sagastuy-Brena](https://github.com/jvrsgsty) (Stanford)
 
-# License
-MIT
+# Contact
+If you have any questions or encounter issues, either submit a Github issue here (preferred) or [email me](https://anayebi.github.io/contact/).
