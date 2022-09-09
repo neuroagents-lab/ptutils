@@ -300,7 +300,7 @@ class ResNet(nn.Module):
         return self._forward_impl(x)
 
 
-def _resnet(arch, block, layers):
+def _resnet(block, layers):
     model = ResNet(block=block, layers=layers)
     return model
 
@@ -312,7 +312,7 @@ def resnet18():
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _resnet(arch="resnet18", block=BasicBlock, layers=[2, 2, 2, 2])
+    return _resnet(block=BasicBlock, layers=[2, 2, 2, 2])
 
 
 def resnet34():
@@ -322,7 +322,7 @@ def resnet34():
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _resnet(arch="resnet34", block=BasicBlock, layers=[3, 4, 6, 3])
+    return _resnet(block=BasicBlock, layers=[3, 4, 6, 3])
 
 
 def resnet50():
@@ -332,7 +332,7 @@ def resnet50():
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _resnet(arch="resnet50", block=Bottleneck, layers=[3, 4, 6, 3])
+    return _resnet(block=Bottleneck, layers=[3, 4, 6, 3])
 
 
 def resnet101():
@@ -342,7 +342,7 @@ def resnet101():
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _resnet(arch="resnet101", block=Bottleneck, layers=[3, 4, 23, 3])
+    return _resnet(block=Bottleneck, layers=[3, 4, 23, 3])
 
 
 def resnet152():
@@ -352,4 +352,4 @@ def resnet152():
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
     """
-    return _resnet(arch="resnet152", block=Bottleneck, layers=[3, 8, 36, 3])
+    return _resnet(block=Bottleneck, layers=[3, 8, 36, 3])

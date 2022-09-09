@@ -14,10 +14,7 @@ from ptutils.model_training.train_utils import (
     save_checkpoint,
 )
 from ptutils.model_training.trainer import Trainer
-from ptutils.model_training.training_dataloader_utils import (
-    _acquire_dataloader,
-    wrap_dataloaders,
-)
+from ptutils.model_training.training_dataloader_utils import wrap_dataloaders, get_imagenet_loaders
 from ptutils.datasets import ImageNetSupervised
 from ptutils.models.model_transforms import MODEL_TRANSFORMS
 
@@ -157,7 +154,7 @@ class SupervisedImageNetTrainer(Trainer):
         )
 
         train_loader, val_loader = wrap_dataloaders(
-            dataloader_func=self.get_imagenet_loaders,
+            dataloader_func=get_imagenet_loaders,
             params=params,
             my_transforms=my_transforms,
             device=self.device,
