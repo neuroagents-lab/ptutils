@@ -67,65 +67,6 @@ class SupervisedImageNetTrainer(Trainer):
         )
         return optim
 
-    def get_imagenet_loaders(
-        self, params, my_transforms, rank=0, world_size=1, tpu=False
-    ):
-        # Assumes image_dir organization is /PATH/TO/IMAGENET/{train, val}/{synsets}/*.JPEG
-        assert "image_dir" in params.keys()
-        assert "dataset_class" in params.keys()
-        assert "train_batch_size" in params.keys()
-        assert "val_batch_size" in params.keys()
-        assert "num_workers" in params.keys()
-        assert "train" in my_transforms.keys()
-        assert "val" in my_transforms.keys()
-
-        train_batch_size = params["train_batch_size"]
-        val_batch_size = params["val_batch_size"]
-        num_workers = params["num_workers"]
-        drop_last = params.get("drop_last", False)
-        dataset_class = params["dataset_class"]
-        assert issubclass(dataset_class, ImageNetBase)
-        imagenet_dir = params["image_dir"]
-        train_transforms = my_transforms["train"]
-        val_transforms = my_transforms["val"]
-
-        if train_transforms is not None:
-            train_set = dataset_class(
-                is_train=True,
-                imagenet_dir=imagenet_dir,
-                image_transforms=train_transforms,
-            )
-
-        val_set = dataset_class(
-            is_train=False, imagenet_dir=imagenet_dir, image_transforms=val_transforms
-        )
-
-        if train_transforms is not None:
-            train_loader = _acquire_dataloader(
-                dataset=train_set,
-                train=True,
-                batch_size=train_batch_size,
-                num_workers=num_workers,
-                rank=rank,
-                world_size=world_size,
-                drop_last=drop_last,
-                tpu=tpu,
-            )
-        else:
-            train_loader = None
-
-        val_loader = _acquire_dataloader(
-            dataset=val_set,
-            train=False,
-            batch_size=val_batch_size,
-            num_workers=num_workers,
-            rank=rank,
-            world_size=world_size,
-            drop_last=drop_last,
-            tpu=tpu,
-        )
-
-        return train_loader, val_loader
 
     def initialize_dataloader(self):
         assert hasattr(self, "config")
@@ -162,29 +103,6 @@ class SupervisedImageNetTrainer(Trainer):
             world_size=self.world_size,
         )
         return train_loader, val_loader
-
-    def adjust_learning_rate(self):
-        assert hasattr(self, "optimizer")
-        assert hasattr(self, "config")
-        assert hasattr(self, "use_tpu")
-
-        self.check_key("optimizer_params")
-        assert "lr_decay_schedule" in self.config["optimizer_params"].keys()
-        assert "lr_decay_rate" in self.config["optimizer_params"].keys()
-        assert "initial_lr" in self.config["optimizer_params"].keys()
-
-        initial_lr = self.config["optimizer_params"]["initial_lr"]
-        lr_decay_schedule = self.config["optimizer_params"]["lr_decay_schedule"]
-        lr_decay_rate = self.config["optimizer_params"]["lr_decay_rate"]
-        assert isinstance(lr_decay_rate, float)
-
-        steps = np.sum(self.current_epoch >= np.asarray(lr_decay_schedule))
-        if steps > 0:
-            new_lr = initial_lr * (lr_decay_rate ** steps)
-            for param_group in self.optimizer.param_groups:
-                param_group["lr"] = new_lr
-
-            self.print_fn(f"Updating learning rate to: {new_lr}")
 
     def train_one_epoch(self):
         assert hasattr(self, "train_loader")
