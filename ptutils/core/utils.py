@@ -4,6 +4,7 @@ import random
 import numpy as np
 import torch
 
+
 def grab_results(dbname, collname, exp_id, port=27017, idx=-1):
     conn = pm.MongoClient(port=port)
     coll = conn[dbname][collname]
@@ -13,6 +14,7 @@ def grab_results(dbname, collname, exp_id, port=27017, idx=-1):
     if idx is None:
         return result_list
     return result_list[idx]
+
 
 def set_seed(seed):
     random.seed(seed)

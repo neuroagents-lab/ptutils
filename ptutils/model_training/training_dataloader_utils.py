@@ -76,9 +76,7 @@ def wrap_dataloaders(
     return train_loader, val_loader
 
 
-def get_imagenet_loaders(
-    params, my_transforms, rank=0, world_size=1, tpu=False
-):
+def get_imagenet_loaders(params, my_transforms, rank=0, world_size=1, tpu=False):
     # Assumes image_dir organization is /PATH/TO/IMAGENET/{train, val}/{synsets}/*.JPEG
     assert "image_dir" in params.keys()
     assert "dataset_class" in params.keys()
@@ -100,9 +98,7 @@ def get_imagenet_loaders(
 
     if train_transforms is not None:
         train_set = dataset_class(
-            is_train=True,
-            imagenet_dir=imagenet_dir,
-            image_transforms=train_transforms,
+            is_train=True, imagenet_dir=imagenet_dir, image_transforms=train_transforms,
         )
 
     val_set = dataset_class(

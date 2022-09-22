@@ -8,6 +8,7 @@ from ptutils.model_training.train_utils import parse_config
 from ptutils.core.default_constants import USE_MONGODB
 from ptutils.core.utils import set_seed
 
+
 class Trainer:
     def __init__(self, config):
         if isinstance(config, str):

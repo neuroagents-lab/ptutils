@@ -14,7 +14,10 @@ from ptutils.model_training.train_utils import (
     save_checkpoint,
 )
 from ptutils.model_training.trainer import Trainer
-from ptutils.model_training.training_dataloader_utils import wrap_dataloaders, get_imagenet_loaders
+from ptutils.model_training.training_dataloader_utils import (
+    wrap_dataloaders,
+    get_imagenet_loaders,
+)
 from ptutils.datasets import ImageNetSupervised
 from ptutils.models.model_transforms import MODEL_TRANSFORMS
 
@@ -66,7 +69,6 @@ class SupervisedImageNetTrainer(Trainer):
             weight_decay=self.config["optimizer_params"]["weight_decay"],
         )
         return optim
-
 
     def initialize_dataloader(self):
         assert hasattr(self, "config")
