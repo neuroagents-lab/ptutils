@@ -26,8 +26,8 @@ class Trainer:
 
         # Set device, print function, model, loss, etc.
         self.device = self._set_device()
-        self.model, self.model_name = self.initialize_model()
         self.train_loader, self.val_loader = self.initialize_dataloader()
+        self.model, self.model_name = self.initialize_model()
         self.loss_func = self.initialize_loss_function()
         self.optimizer = self.initialize_optimizer()
 
