@@ -15,6 +15,7 @@ def _acquire_dataloader(
     world_size=1,
     drop_last=False,
     tpu=False,
+    collate_fn=None,
 ):
     # Adapted from: https://github.com/pytorch/xla/blob/56138cf7b29dc20ed9b0ca5934b91d1cf9a72b70/test/test_train_mp_imagenet.py#L149
     assert isinstance(dataset, data.Dataset)
@@ -37,7 +38,11 @@ def _acquire_dataloader(
     # Therefore, we keep drop_last=False in DistributedSampler to sample as many distinct examples as possible.
     loader_kwargs["drop_last"] = drop_last
     loader = data.DataLoader(
-        dataset=dataset, batch_size=batch_size, sampler=sampler, **loader_kwargs
+        dataset=dataset,
+        batch_size=batch_size,
+        sampler=sampler,
+        collate_fn=collate_fn,
+        **loader_kwargs
     )
     return loader
 
