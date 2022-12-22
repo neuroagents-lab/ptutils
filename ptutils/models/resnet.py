@@ -308,9 +308,6 @@ def _resnet(block, layers):
 def resnet18():
     r"""ResNet-18 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-        progress (bool): If True, displays a progress bar of the download to stderr
     """
     return _resnet(block=BasicBlock, layers=[2, 2, 2, 2])
 
@@ -318,9 +315,6 @@ def resnet18():
 def resnet34():
     r"""ResNet-34 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-        progress (bool): If True, displays a progress bar of the download to stderr
     """
     return _resnet(block=BasicBlock, layers=[3, 4, 6, 3])
 
@@ -328,9 +322,6 @@ def resnet34():
 def resnet50():
     r"""ResNet-50 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-        progress (bool): If True, displays a progress bar of the download to stderr
     """
     return _resnet(block=Bottleneck, layers=[3, 4, 6, 3])
 
@@ -338,9 +329,6 @@ def resnet50():
 def resnet101():
     r"""ResNet-101 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-        progress (bool): If True, displays a progress bar of the download to stderr
     """
     return _resnet(block=Bottleneck, layers=[3, 4, 23, 3])
 
@@ -348,8 +336,5 @@ def resnet101():
 def resnet152():
     r"""ResNet-152 model from
     `"Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>`_
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-        progress (bool): If True, displays a progress bar of the download to stderr
     """
     return _resnet(block=Bottleneck, layers=[3, 8, 36, 3])
