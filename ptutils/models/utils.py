@@ -34,3 +34,20 @@ def load_model(
     model.eval()
 
     return model
+
+def load_model_and_layer(model, model_layer, model_loader_kwargs):
+    assert isinstance(model_layer, str)
+    model = load_model(model, **model_loader_kwargs)
+    if isinstance(model, torch.nn.DataParallel):
+        layer_module = model.module
+    else:
+        layer_module = model
+
+    for part in model_layer.split("."):
+        layer_module = layer_module._modules.get(part)
+        assert (
+            layer_module is not None
+        ), f"No submodule found for layer {model_layer}, at part {part}."
+
+    model_layer = layer_module
+    return model, model_layer
