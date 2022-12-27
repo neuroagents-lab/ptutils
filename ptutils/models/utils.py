@@ -5,8 +5,7 @@ def load_model(
     model,
     trained=False,
     model_path=None,
-    state_dict_key="state_dict",
-    **kwargs,
+    state_dict_key="state_dict"
 ):
     # Load weights if params file is given.
     if model_path is not None and trained:
