@@ -1,12 +1,8 @@
 import torch
 from collections import OrderedDict
 
-def load_model(
-    model,
-    trained=False,
-    model_path=None,
-    state_dict_key="state_dict"
-):
+
+def load_model(model, trained=False, model_path=None, state_dict_key="state_dict"):
     # Load weights if params file is given.
     if model_path is not None and trained:
         try:
@@ -34,7 +30,10 @@ def load_model(
 
     return model
 
-def load_model_and_layer(model, model_layer, model_loader_kwargs):
+
+def load_model_and_layer(
+    model, model_layer, model_loader_kwargs, custom_attr_name="layers"
+):
     assert isinstance(model_layer, str)
     model = load_model(model, **model_loader_kwargs)
     if isinstance(model, torch.nn.DataParallel):
@@ -43,7 +42,11 @@ def load_model_and_layer(model, model_layer, model_loader_kwargs):
         layer_module = model
 
     for part in model_layer.split("."):
-        layer_module = layer_module._modules.get(part)
+        if hasattr(model, custom_attr_name):
+            # string that we key into custom_attr_name dict directly, rather than an actual module
+            layer_module = part
+        else:
+            layer_module = layer_module._modules.get(part)
         assert (
             layer_module is not None
         ), f"No submodule found for layer {model_layer}, at part {part}."
