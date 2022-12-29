@@ -2,9 +2,10 @@ import torch
 from collections import OrderedDict
 
 
-def load_model(model, trained=False, model_path=None, state_dict_key="state_dict"):
+def load_model(model=None, trained=False, model_path=None, state_dict_key="state_dict"):
     # Load weights if params file is given.
     if model_path is not None and trained:
+        assert model is not None
         try:
             params = torch.load(model_path, map_location="cpu")
         except:
@@ -25,8 +26,9 @@ def load_model(model, trained=False, model_path=None, state_dict_key="state_dict
         model.load_state_dict(new_sd)
         print(f"Loaded parameters from {model_path}")
 
-    # Set model to eval mode
-    model.eval()
+    if model is not None:
+        # Set model to eval mode
+        model.eval()
 
     return model
 
@@ -35,20 +37,21 @@ def load_model_layer(
     model, model_layer, custom_attr_name="layers"
 ):
     assert isinstance(model_layer, str)
-    if isinstance(model, torch.nn.DataParallel):
-        layer_module = model.module
-    else:
-        layer_module = model
-
-    for part in model_layer.split("."):
-        if hasattr(model, custom_attr_name):
-            # string that we key into custom_attr_name dict directly, rather than an actual module
-            layer_module = part
+    if model is not None:
+        if isinstance(model, torch.nn.DataParallel):
+            layer_module = model.module
         else:
-            layer_module = layer_module._modules.get(part)
-        assert (
-            layer_module is not None
-        ), f"No submodule found for layer {model_layer}, at part {part}."
+            layer_module = model
 
-    model_layer = layer_module
+        for part in model_layer.split("."):
+            if hasattr(model, custom_attr_name):
+                # string that we key into custom_attr_name dict directly, rather than an actual module
+                layer_module = part
+            else:
+                layer_module = layer_module._modules.get(part)
+            assert (
+                layer_module is not None
+            ), f"No submodule found for layer {model_layer}, at part {part}."
+
+        model_layer = layer_module
     return model_layer
