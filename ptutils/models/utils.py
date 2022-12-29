@@ -31,11 +31,10 @@ def load_model(model, trained=False, model_path=None, state_dict_key="state_dict
     return model
 
 
-def load_model_and_layer(
-    model, model_layer, model_loader_kwargs, custom_attr_name="layers"
+def load_model_layer(
+    model, model_layer, custom_attr_name="layers"
 ):
     assert isinstance(model_layer, str)
-    model = load_model(model, **model_loader_kwargs)
     if isinstance(model, torch.nn.DataParallel):
         layer_module = model.module
     else:
@@ -52,4 +51,4 @@ def load_model_and_layer(
         ), f"No submodule found for layer {model_layer}, at part {part}."
 
     model_layer = layer_module
-    return model, model_layer
+    return model_layer
