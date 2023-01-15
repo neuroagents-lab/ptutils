@@ -33,9 +33,7 @@ def load_model(model=None, trained=False, model_path=None, state_dict_key="state
     return model
 
 
-def load_model_layer(
-    model, model_layer, custom_attr_name="layers"
-):
+def load_model_layer(model, model_layer, custom_attr_name="layers"):
     assert isinstance(model_layer, str)
     if model is not None:
         if isinstance(model, torch.nn.DataParallel):
