@@ -11,10 +11,13 @@ def load_model(model=None, trained=False, model_path=None, state_dict_key="state
         except:
             raise ValueError(f"Could not open file: {model_path}")
 
-        assert (
-            state_dict_key in params.keys()
-        ), f"{state_dict_key} not in params dictionary."
-        sd = params[state_dict_key]
+        if state_dict_key is None:
+            sd = params
+        else:
+            assert (
+                state_dict_key in params.keys()
+            ), f"{state_dict_key} not in params dictionary."
+            sd = params[state_dict_key]
         # adapted from: https://discuss.pytorch.org/t/solved-keyerror-unexpected-key-module-encoder-embedding-weight-in-state-dict/1686/13
         new_sd = OrderedDict()
         for k, v in sd.items():
