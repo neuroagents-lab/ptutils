@@ -82,10 +82,7 @@ def video_to_rgb(
     )
     reader = cv2.VideoCapture(video_filename)
     try:
-        (
-            success,
-            frame,
-        ) = reader.read()  # read first frame
+        (success, frame,) = reader.read()  # read first frame
         # print(f"{video_filename}, {success}, {out_dir}, shortest side resize: {shortest_side_size}")
         count = 0
         while success:
